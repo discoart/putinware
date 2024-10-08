@@ -1,8 +1,10 @@
----@diagnostic disable: undefined-global, deprecated, lowercase-global
+---@diagnostic disable: undefined-global, deprecated, lowercase-global -- for visual studio code
+
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+loadstring(game:HttpGet('https://pastebin.com/raw/ZudrLkis'))()
 local Window = Rayfield:CreateWindow({
-   Name = "putinware alpha (v0.7)",
+   Name = "putinware alpha (v0.8)",
    LoadingTitle = "putinware client is now injecting",
    LoadingSubtitle = "please wait a few seconds",
    ConfigurationSaving = {
@@ -31,152 +33,65 @@ local Tab = Window:CreateTab("visuals")
 local Section = Tab:CreateSection("player esp") 
 
 local Toggle = Tab:CreateToggle({
-    Name = "esp boxes",
+    Name = "simple esp",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
-        getgenv().EspSettings.Selected.Boxes = Value
+        local Players = game:GetService("Players")
+
+        local function ApplyHighlight(Player)
+            local Connections = {}
+            local Character = Player.Character or Player.CharacterAdded:Wait()
+            local Humanoid = Character:WaitForChild("Humanoid")
+            local Highlight = Instance.new("Highlight", Character)
+
+            local function UpdateFillColor()
+                local DefaultColor = Color3.fromRGB(255, 255, 255)
+                Highlight.FillColor = (Player.TeamColor and Player.TeamColor.Color) or DefaultColor
+            end
+
+            local function Disconnect()
+                Highlight:Destroy()
+                for _, Connection in next, Connections do
+                    Connection:Disconnect()
+                end
+            end
+            table.insert(Connections, Player:GetPropertyChangedSignal("TeamColor"):Connect(UpdateFillColor))
+            table.insert(Connections, Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                if Humanoid.Health <= 0 then
+                    Disconnect()
+                end
+            end))
+
+            Player.CharacterAdded:Connect(function()
+                Disconnect()
+                ApplyHighlight(Player)
+            end)
+
+            UpdateFillColor()
+        end
+        local function ToggleHighlight(Value)
+            if Value == true then
+                for _, Player in next, Players:GetPlayers() do
+                    local Highlight = Player.Character:FindFirstChildOfClass("Highlight")
+                    if Highlight then
+                        Highlight:Destroy()
+                    end
+                    ApplyHighlight(Player)
+                end
+                Players.PlayerAdded:Connect(ApplyHighlight)
+            elseif Value == false then
+                for _, Player in next, Players:GetPlayers() do
+                        local Highlight = Player.Character:FindFirstChildOfClass("Highlight")
+                        if Highlight then
+                            Highlight:Destroy()
+                            end
+                         end
+                      end
+                end
+        ToggleHighlight(Value)
     end,
 })
-
-
-
-    getgenv().EspSettings = {
-    TeamCheck = false,
-    ToggleKey = "RightAlt",
-    RefreshRate = 10, -- how fast the esp updates (milliseconds)
-    MaximumDistance = 500, -- only renders players within this distance
-    FaceCamera = false, -- Makes esp appear 2D
-    AlignPoints = false, -- Improves 2D effect; only works while FaceCamera is enabled
-    MouseVisibility = {
-        Enabled = true, -- makes any drawing objects transparent when they are near your mouse
-        Radius = 60,
-        Transparency = 0.3,
-        Method = "Hover", -- "Radius" or "Hover" | Hover is newest method and is a lot more accurate than Radius
-        HoverRadius = 50,
-        Selected = { -- set any of these to false to ignore them
-            Boxes = false,
-            Tracers = false,
-            Names = false,
-            Skeletons = false,
-            HealthBars = true,
-            HeadDots = true,
-            LookTracers = false
-        }
-    },
-    Highlights = {
-        Enabled = false,
-        Players = {}, -- put player usernames into this table to 'highlight' them
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 150, 0),
-        AlwaysOnTop = true
-    },
-    NPC = {
-        Color = Color3.fromRGB(150, 150, 150),
-        Transparency = 1,
-        RainbowColor = false,
-        Overrides = {
-            Boxes = false,
-            Tracers = false,
-            Names = false,
-            Skeletons = false,
-            HealthBars = true,
-            HeadDots = true,
-            LookTracers = false
-        }
-    },
-    Boxes = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = false,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Thickness = 1
-    },
-    Tracers = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = true,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Origin = "Top", -- "Top" or "Center" or "Bottom" or "Mouse"
-        Thickness = 1
-    },
-    Names = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = true,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        Font = Drawing.Fonts.UI, -- UI or System or Plex or Monospace
-        Size = 18,
-        ShowDistance = false,
-        ShowHealth = true,
-        UseDisplayName = false,
-        DistanceDataType = "m", -- what it says after the distance (ex. 100m)
-        HealthDataType = "Percentage" -- "Percentage" or "Value"
-    },
-    Skeletons = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = false,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Thickness = 1
-    },
-    HealthBars = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(0, 255, 0),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = true,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Origin = "None", -- "None" or "Left" or "Right"
-        OutlineBarOnly = true
-    },
-    HeadDots = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = true,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Thickness = 1,
-        Filled = false,
-        Scale = 1
-    },
-    LookTracers = {
-        Enabled = false,
-        Transparency = 1,
-        Color = Color3.fromRGB(255, 255, 255),
-        UseTeamColor = true,
-        RainbowColor = false,
-        Outline = true,
-        OutlineColor = Color3.fromRGB(0, 0, 0),
-        OutlineThickness = 1,
-        Thickness = 1,
-        Length = 5
-    }
- }
-
- if loadscriptbase == true then
-    loadstring(game:HttpGet("https://pastebin.com/raw/mLFws5f1"))()
- end
 
 local Section = Tab:CreateSection("tracers")
 

@@ -1,4 +1,4 @@
-skid-based script for roblox.
+open source skid-based script for roblox.
 
 actual ver: alpha0.7
 

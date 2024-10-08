@@ -349,7 +349,7 @@ end
             CurrentValue = false,
             Flag = "Toggle1",
             Callback = function(Value)
-                _G.TeamCheck = Value
+                _G.TTeamCheck = Value
                 end
             })
 

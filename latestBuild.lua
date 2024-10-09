@@ -23,7 +23,7 @@ local Window = Rayfield:CreateWindow({
       Subtitle = "key guard",
       Note = "get key from discord (#client-key)",
       FileName = "putinkey",
-      SaveKey = false,
+      SaveKey = true,
       GrabKeyFromSite = false,
       Key = "MuZiQ7d1wOP"
    }

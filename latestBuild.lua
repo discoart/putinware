@@ -1,97 +1,86 @@
 ---@diagnostic disable: undefined-global, deprecated, lowercase-global -- for visual studio code
 
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-loadstring(game:HttpGet('https://pastebin.com/raw/ZudrLkis'))()
-local Window = Rayfield:CreateWindow({
-   Name = "putinware alpha (v0.8)",
-   LoadingTitle = "putinware client is now injecting",
-   LoadingSubtitle = "please wait a few seconds",
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil,
-      FileName = "putinware"
-   },
-   Discord = {
-      Enabled = true,
-      Invite = "Puhp2hjCSs",
-      RememberJoins = true
-   },
-   KeySystem = true,
-   KeySettings = {
-      Title = "putinware",
-      Subtitle = "key guard",
-      Note = "get key from discord (#client-key)",
-      FileName = "putinkey",
-      SaveKey = true,
-      GrabKeyFromSite = false,
-      Key = "MuZiQ7d1wOP"
-   }
-})
+loadstring(game:HttpGet('https://pastebin.com/raw/ZudrLkis', true))()
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield', true))()
+
+   local Window = Rayfield:CreateWindow({
+      Name = "putinware alpha (v0.9)",
+      LoadingTitle = "putinware client is now injecting",
+      LoadingSubtitle = "please wait a few seconds",
+      ConfigurationSaving = {
+         Enabled = false,
+         FolderName = nil,
+         FileName = "putinware"
+      },
+      Discord = {
+         Enabled = true,
+         Invite = "Puhp2hjCSs",
+         RememberJoins = true
+      },
+      KeySystem = false,
+      KeySettings = {
+         Title = "putinware",
+         Subtitle = "key guard",
+         Note = "get key from discord (#client-key)",
+         FileName = "putinkey",
+         SaveKey = false,
+         GrabKeyFromSite = false,
+         Key = "MuZiQ7d1wOP"
+      }
+   })
 
 local Tab = Window:CreateTab("visuals")
 local Section = Tab:CreateSection("player esp") 
 
-local Toggle = Tab:CreateToggle({
-    Name = "simple esp",
+local ToggleESP = Tab:CreateToggle({
+    Name = "esp active",
     CurrentValue = false,
-    Flag = "Toggle1",
+    Flag = "ToggleESP",
     Callback = function(Value)
-        local Players = game:GetService("Players")
-
-        local function ApplyHighlight(Player)
-            local Connections = {}
-            local Character = Player.Character or Player.CharacterAdded:Wait()
-            local Humanoid = Character:WaitForChild("Humanoid")
-            local Highlight = Instance.new("Highlight", Character)
-
-            local function UpdateFillColor()
-                local DefaultColor = Color3.fromRGB(255, 255, 255)
-                Highlight.FillColor = (Player.TeamColor and Player.TeamColor.Color) or DefaultColor
-            end
-
-            local function Disconnect()
-                Highlight:Destroy()
-                for _, Connection in next, Connections do
-                    Connection:Disconnect()
-                end
-            end
-            table.insert(Connections, Player:GetPropertyChangedSignal("TeamColor"):Connect(UpdateFillColor))
-            table.insert(Connections, Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                if Humanoid.Health <= 0 then
-                    Disconnect()
-                end
-            end))
-
-            Player.CharacterAdded:Connect(function()
-                Disconnect()
-                ApplyHighlight(Player)
-            end)
-
-            UpdateFillColor()
+        if Value == true then
+            loadstring(game:HttpGet('https://pastebin.com/raw/FW2Kr7YE', true))()
+        else
+            _G.WRDESPEnabled = false
+            disable()
         end
-        local function ToggleHighlight(Value)
-            if Value == true then
-                for _, Player in next, Players:GetPlayers() do
-                    local Highlight = Player.Character:FindFirstChildOfClass("Highlight")
-                    if Highlight then
-                        Highlight:Destroy()
-                    end
-                    ApplyHighlight(Player)
-                end
-                Players.PlayerAdded:Connect(ApplyHighlight)
-            elseif Value == false then
-                for _, Player in next, Players:GetPlayers() do
-                        local Highlight = Player.Character:FindFirstChildOfClass("Highlight")
-                        if Highlight then
-                            Highlight:Destroy()
-                            end
-                         end
-                      end
-                end
-        ToggleHighlight(Value)
-    end,
+    end
 })
+
+local ToggleBoxes = Tab:CreateToggle({
+    Name = "esp boxes",
+    CurrentValue = false,
+    Flag = "ToggleBoxes",
+    Callback = function(Value)
+        _G.WRDESPBoxes = Value
+    end
+})
+
+local ToggleNickTags = Tab:CreateToggle({
+    Name = "esp nicktags",
+    CurrentValue = false,
+    Flag = "ToggleNickTags",
+    Callback = function(Value)
+        _G.WRDESPNames = Value
+    end
+})
+
+local ToggleTeamColors = Tab:CreateToggle({
+    Name = "esp team colors",
+    CurrentValue = false,
+    Flag = "ToggleTeamColors",
+    Callback = function(Value)
+        _G.WRDESPTeamColors = Value
+    end
+})
+
+function disable()
+    ToggleBoxes:Set(false)
+    ToggleNickTags:Set(false)
+    ToggleTeamColors:Set(false)
+end
+    
 
 local Section = Tab:CreateSection("tracers")
 

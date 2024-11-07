@@ -9,4 +9,4 @@
 join us in discord: https://discord.gg/Puhp2hjCSs
 
 
-We are on RECODE now! To see additionakl information, check the discord-server.
+We are on RECODE now! To see additional information, check the discord-server.
